@@ -281,7 +281,7 @@ int ValueDropDown(int turn)
 	if (turn != 0)return(3 * value);
 	else return(-3 * value);
 }
-//盤面を相手との意思の数で評価する
+//盤面を相手との石の数で評価する
 int ValueBoardNum() {
 	int x, y, value = 0;
 	for (y = 0; y < BOARD; y++)
@@ -462,7 +462,7 @@ int main() {
 
 			}
 			turn = (turn + 1) % 2;             //交代
-											   //もしエンド関数が１ならばパス２ならば終了
+	  //もしエンド関数が１ならばパス２ならば終了
 			if (CheckEnd(turn) == 1) {
 				printf("パス\n");
 				turn = (turn + 1) % 2;
