@@ -25,8 +25,8 @@ const int Value[BOARD][BOARD] = {
 	{ 50,-10,  4, -1, -1,  4,-10, 50, },
 	{ -10,-15, -1, -3, -3, -1,-15,-10, },
 	{ 4, -1,  2, -1, -1,  2, -1,  4, },
-	{ -1, -3, -1,  0,  0, -1, -3, -1, },
-	{ -1, -3, -1,  0,  0, -1, -3, -1, },
+	{ -4, -3, -1,  0,  0, -1, -3, -4, },
+	{ -1, -3, -1,  0,  0, -1, -3, -4, },
 	{ 4, -1,  2, -1, -1,  2, -1,  4, },
 	{ -10,-15, -1, -3, -3, -1,-15,-10, },
 	{ 50,-10,  4, -1, -1,  4,-10, 50, }
@@ -41,7 +41,7 @@ typedef struct info
 int Number;   //手数
 int board[BOARD][BOARD];  //ボード
 int mode;                  //モード
-						  //移動量
+						   //移動量
 int vector_y[] = { -1,-1,0,1,1,1,0,-1 };
 int vector_x[] = { 0,1,1,1,0,-1,-1,-1 };
 //ボードの初期化
@@ -94,51 +94,75 @@ void Display(void) {
 }
 //難易度を決める
 void InputMode() {
-	int m, s;
+	int lv, check;
 	mode = 0;
 	while (1) {
 		printf("難易度を決めてください\n1:easy,2:normal,3;hard\n");
-		if (scanf("%d", &m) == 0)//数値がなければクリア
+		if (scanf("%d", &lv) == 0)//数値がなければクリア
 		{
 			scanf("%*[^\n]%*c");
 			printf("入力エラー\n");
 		}
-		if (m == EASY) {
+		if (lv == EASY) {
 			printf("easyモードで開始します\n");
 			mode = 1;
 			break;
 		}
-		else if (m == NORMAL) {
+		else if (lv == NORMAL) {
 			printf("noramlモードで開始します\n");
 			mode = 2;
 			break;
 		}
-		else if (m == HARD) {
+		else if (lv == HARD) {
 			while (1)
 			{
 				printf("本当に宜しいですね(1;yes,2;no)？\n");
 				//1が押されれば難易度決めに戻る0が押されればそのまま続行
-				if (scanf("%d", &s) == NULL)   //数値がなければクリア
+				if (scanf("%d", &check) == NULL)   //数値がなければクリア
 				{
 					scanf("%*[^\n]%*c");
 				}
-				else if (s == 1) {
+				else if (check == 1) {
 					printf("開始します\n");
 					mode = 3;
 					break;
 				}
-				else if (s == 2) break;
+				else if (check == 2) break;
 				else continue;
 			}
-			if (s == 1) break;
-			else if (s == 2) continue;
+			if (check == 1) break;
+			else if (check == 2) continue;
 		}
 
 	}
 }
+//先行(白)後行(黒)か決める
+int InputTurn()
+{
+	int ch;
+	while (1)
+	{
+		printf("先行(白)か後行(黒)か選んでください。\n1:先行(白),2:後行(黒)\n");
+		if (scanf("%d", &ch) == 0)//数値がなければクリア
+		{
+			scanf("%*[^\n]%*c");
+			printf("入力エラー\n");
+		}
+		if (ch == 1)
+		{
+			return 1;
+			break;
+		}
+		else if (ch == 2)
+		{
+			return 0;
+			break;
+		}
+	}
+}
 //ひっくり返る駒があるかを見る
-int VectorLook(int x,int y, int turn, int vec)
-{ 
+int VectorLook(int x, int y, int turn, int vec)
+{
 	int flag = 0;
 	while (1) {
 		x += vector_x[vec];
@@ -146,7 +170,7 @@ int VectorLook(int x,int y, int turn, int vec)
 		//ボード外で終了
 		if (x<0 || y<0 || x >BOARD - 1 || y > BOARD - 1)return 0;
 		//空いているマスがあれば終了
-        if (board[y][x] == NONE)return 0;
+		if (board[y][x] == NONE)return 0;
 		//相手の駒があればフラグが立つ
 		if (board[y][x] == (turn ? BLACK : WHITE)) {
 			flag = 1;
@@ -167,7 +191,7 @@ int Check(int x, int y, int turn)
 	int vector;
 	//ひっくり返るか？
 	for (vector = 0; vector<8; vector++) {
-		if (VectorLook(x,y, turn, vector) == 1)return 1;
+		if (VectorLook(x, y, turn, vector) == 1)return 1;
 	}
 	return 0;
 }
@@ -183,11 +207,11 @@ void Turn(Nodo* nodo, int turn, int vec) {
 		if (board[y][x] == (turn ? WHITE : BLACK)) {
 			break;
 		}
-			board[y][x] = (turn ? WHITE : BLACK);	//自分自身でないならひっくり返す
-			nodo->position[i] = x + y*BOARD;      //記憶する
-			i++;
+		board[y][x] = (turn ? WHITE : BLACK);	//自分自身でないならひっくり返す
+		nodo->position[i] = x + y*BOARD;      //記憶する
+		i++;
 	}
-	        nodo->position[nodo->point=i] = 0;
+	nodo->position[nodo->point = i] = 0;
 }
 //入力から裏返す判定
 int InputTurn(Nodo* nodo, int turn) {
@@ -198,7 +222,7 @@ int InputTurn(Nodo* nodo, int turn) {
 	//全ての方向を確認
 	for (vector = 0; vector<8; vector++) {
 		//ひっくり返る物があれば裏返す
-		if (VectorLook(nodo->x,nodo->y, turn, vector) == 1) {
+		if (VectorLook(nodo->x, nodo->y, turn, vector) == 1) {
 			//裏返す処理
 			Turn(nodo, turn, vector);
 			flag = 1;
@@ -214,7 +238,7 @@ int InputTurn(Nodo* nodo, int turn) {
 //入力
 void Input(int turn)
 {
-	int x, y,re;
+	int x, y, re;
 	while (1) {
 		//入力
 		printf("１～８までの間でx軸を入力してください。(貴方は白です)>");
@@ -230,16 +254,18 @@ void Input(int turn)
 			scanf("%*[^\n]%*c");
 			printf("入力エラー\n");
 			continue;
-		}else if (x>BOARD || x <= 0 || y>BOARD || y <= 0){
+		}
+		else if (x>BOARD || x <= 0 || y>BOARD || y <= 0) {
 			printf("範囲内で入力してください\n");
 			x = 0; y = 0;
 			continue;
 		}
 		//置けるか
-		if(Check(x-1,y-1, turn)==1){
+		if (Check(x - 1, y - 1, turn) == 1) {
 			Nodo nodo;
-			initNodo(&nodo, x-1, y-1);
-			InputTurn(&nodo,turn);
+			initNodo(&nodo, x - 1, y - 1);              //初期ノードにｘに1引いた値ととyに１引いた値を入れる
+			InputTurn(&nodo, turn);                      //裏返す処理
+			Number++;                                  //手数を１足す
 			break;
 		}
 		else printf("裏返せませんでした。\n相手の石が裏返せる場所においてください。\n");
@@ -251,6 +277,7 @@ void Input(int turn)
 void Reverse(Nodo nodo)
 {
 	int i = 0;
+	//ノードポジションに数値が入っていればそのポジションに-1を掛けて戻す
 	while (nodo.position[i]> 0) {
 		int x = nodo.position[i] % 8;
 		int y = nodo.position[i] / 8;
@@ -274,10 +301,10 @@ int ValuePlace()
 //手がある場所の数で盤面評価
 int ValueDropDown(int turn)
 {
-	int x, y, value=0;
+	int x, y, value = 0;
 	for (y = 0; y < BOARD; y++)
 		for (x = 0; x < BOARD; x++)
-			if (Check(x, y,turn))value += 1;     //置けるれば評価に１足す
+			if (Check(x, y, turn))value += 1;     //置ければ評価に１足す
 	if (turn != 0)return(3 * value);
 	else return(-3 * value);
 }
@@ -308,7 +335,7 @@ int ValueBoard(int turn) {
 
 }
 //α-β法で探索で最善の策を探索
-int MM(bool flag, int lv, bool put,int turn,int mode,int al,int be)
+int AB(bool flag, int lv, bool put, int turn, int mode, int al, int be)
 {
 	int temp, x, y, vest_x, vest_y;
 	bool flagput = false;
@@ -317,7 +344,7 @@ int MM(bool flag, int lv, bool put,int turn,int mode,int al,int be)
 	if (lv == 0) {
 		//モード１では０２、３では思考をする
 		if (mode == 1) return 0;
-		else if(mode==2||mode==3) return(ValueBoard(turn));
+		else if (mode == 2 || mode == 3) return(ValueBoard(turn));
 	}
 	//フラグが立てば-9999経たなければ9999
 	if (flag)al = -9999;
@@ -327,15 +354,15 @@ int MM(bool flag, int lv, bool put,int turn,int mode,int al,int be)
 	{
 		for (x = 0; x < BOARD; x++)
 		{
-			if (Check(x, y, turn)==1)
+			if (Check(x, y, turn) == 1)
 			{
-				flagput = true;                     
+				flagput = true;
 				initNodo(&nodo, x, y);              //記憶する
 				InputTurn(&nodo, turn);             //石を置く
 				turn = (turn + 1) % 2;              //手番をかえる
-				temp = MM(!flag, lv - 1, true, turn,mode,al,be); //手番をプレイヤーへ変えたためフラグをfalseへ
-				Reverse(nodo);
-				turn = (turn + 1) % 2;                 
+				temp = AB(!flag, lv - 1, true, turn, mode, al, be); //手番をプレイヤーへ変えたためフラグをfalseへ
+				Reverse(nodo);                                  //元に戻す
+				turn = (turn + 1) % 2;
 				//フラグが立ちtempの方がα評価より大きくなるか逆であればベストにいれる
 				if (flag) {
 					if (temp >= al)
@@ -369,26 +396,26 @@ int MM(bool flag, int lv, bool put,int turn,int mode,int al,int be)
 		else return(be);
 	}
 	else if (!put&&mode == 1) return 0;
-	else if(!put&&mode==2)return (ValueBoard(turn));
+	else if (!put&&mode == 2)return (ValueBoard(turn));
 	else
 	{
 		turn = (turn + 1) % 2;
-		temp = MM(!flag, lv - 1, false,turn,mode,al,be);
+		temp = AB(!flag, lv - 1, false, turn, mode, al, be);
 		turn = (turn + 1) % 2;
 		return(temp);
 	}
 }
-//Ai
-void AI(int turn,int mode)
+//AI
+void AI(int turn, int mode)
 {
 	int x, y;
 	Nodo nodo;
 	if (mode == 1 || mode == 2) {
-		y = MM(true, N_SEARCH, true, turn, mode,-9999,9999);   //最善策
+		y = AB(true, N_SEARCH, true, turn, mode, -9999, 9999);   //最善策
 	}
 	else if (mode == 3)
 	{
-		y = MM(true, H_SEARCH, true, turn, mode,-9999,9999);   //最善策
+		y = AB(true, H_SEARCH, true, turn, mode, -9999, 9999);   //最善策
 	}
 	if (0 > y || y >= BOARD*BOARD)
 	{
@@ -397,9 +424,9 @@ void AI(int turn,int mode)
 	}
 	x = y % BOARD;
 	y = y / BOARD;
-	initNodo(&nodo, x, y);
-	InputTurn(&nodo, turn);
-	Number++;
+	initNodo(&nodo, x, y);                                //初期ノードにxとyの値を入れる
+	InputTurn(&nodo, turn);                               //裏返す 
+	Number++;                                             //手数を１増やす
 }
 //ゲーム終了確認の処理
 int CheckEnd(int turn)
@@ -442,27 +469,37 @@ void Win() {
 }
 
 int main() {
-	int turn = 0;
+	int turn = 0, i_turn,Ai_turn;
 	InitBoard();       //初期化関数
+	 //先行後行確認
+	if (InputTurn() == 1)
+	{
+		i_turn = 0;
+		Ai_turn = 1;
+	}
+	else
+	{
+		i_turn = 1;
+		Ai_turn = 0;
+	}
 	//モード関数
 	InputMode();
 	//モードが選ばれていたら開始
 	if (mode == 1 || mode == 2 || mode == 3)
 	{
 		while (turn < 2) {
-			if (turn == 0) {
+			if (turn == i_turn) {
 				printf("貴方の番です\n");
 				Display();                //表示関数
 			}
 			else printf("試行中・・・\n");
-			//ターンが0ならばプレイヤー1ならばAI
-			if (turn == 0) Input(turn);          //入力関数
-			else if (turn == 1) {
-				AI(turn,mode);    //簡単なAI関数
+			if (turn == i_turn) Input(turn);    //入力関数
+			else if (turn == Ai_turn) {
+				AI(turn, mode);            //簡単なAI関数
 
 			}
 			turn = (turn + 1) % 2;             //交代
-	  //もしエンド関数が１ならばパス２ならば終了
+	      //もしエンド関数が１ならばパス２ならば終了
 			if (CheckEnd(turn) == 1) {
 				printf("パス\n");
 				turn = (turn + 1) % 2;
