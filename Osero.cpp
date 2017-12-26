@@ -2,25 +2,25 @@
 #include <stdlib.h>
 #include <time.h>
 #define scanf scanf_s
-#define BOARD 8 //ãƒœãƒ¼ãƒ‰ã®å¤§ãã•
-//çŠ¶æ…‹å®šç¾©
+#define BOARD 8 //ƒ{[ƒh‚Ì‘å‚«‚³
+//ó‘Ô’è‹`
 #define NONE 0 
 #define BLACK 1 
 #define WHITE -1
-//é›£æ˜“åº¦å®šç¾©
+//“ïˆÕ“x’è‹`
 #define EASY 1
 #define NORMAL 2
 #define HARD 3
-//ä¸­ç›¤çµ‚ç›¤ã®æ‰‹æ•°
+//’†”ÕI”Õ‚Ìè”
 #define MIDDLE 15
 #define FINISH 48
-//æ¢ç´¢æ‰‹æ•°
+//’Tõè”
 #define N_SEARCH 5
-#define H_SEARCH 10
-//ãƒ¬ãƒ™ãƒ«å®šç¾©
+#define H_SEARCH 7
+//ƒŒƒxƒ‹’è‹`
 #define MIDDLE 10 
 #define FINISH 48    
-//ãƒ†ãƒ¼ãƒ–ãƒ«ç”Ÿæˆ
+//ƒe[ƒuƒ‹¶¬
 const int Value[BOARD][BOARD] = {
 	{ 50,-10,  4, -1, -1,  4,-10, 50, },
 	{ -10,-15, -1, -3, -3, -1,-15,-10, },
@@ -31,24 +31,24 @@ const int Value[BOARD][BOARD] = {
 	{ -10,-15, -1, -3, -3, -1,-15,-10, },
 	{ 50,-10,  4, -1, -1,  4,-10, 50, }
 };
-//çŸ³ã®å¤‰åŒ–ã®æƒ…å ±ã‚’ç½®ãæ§‹é€ ä½“
+//Î‚Ì•Ï‰»‚Ìî•ñ‚ğ’u‚­\‘¢‘Ì
 typedef struct info
 {
-	int x, y;           //çŸ³ã®å ´æ‰€
-	int point;          //è¿”ã£ãŸçŸ³ã®æ•°
-	int position[30];   //çŸ³ã®ã²ã£ãã‚Šè¿”ã£ãŸå ´æ‰€
+	int x, y;           //Î‚ÌêŠ
+	int point;          //•Ô‚Á‚½Î‚Ì”
+	int position[30];   //Î‚Ì‚Ğ‚Á‚­‚è•Ô‚Á‚½êŠ
 }Nodo;
-int Number;   //æ‰‹æ•°
-int board[BOARD][BOARD];  //ãƒœãƒ¼ãƒ‰
-int mode;                  //ãƒ¢ãƒ¼ãƒ‰
-						   //ç§»å‹•é‡
+int Number;   //è”
+int board[BOARD][BOARD];  //ƒ{[ƒh
+int mode;                  //ƒ‚[ƒh
+						   //ˆÚ“®—Ê
 int vector_y[] = { -1,-1,0,1,1,1,0,-1 };
 int vector_x[] = { 0,1,1,1,0,-1,-1,-1 };
-//ãƒœãƒ¼ãƒ‰ã®åˆæœŸåŒ–
+//ƒ{[ƒh‚Ì‰Šú‰»
 void InitBoard(void)
 {
 	int x, y;
-	//ãƒœãƒ¼ãƒ‰ã‚’åˆæœŸåŒ–
+	//ƒ{[ƒh‚ğ‰Šú‰»
 	for (y = 0; y<BOARD; y++)
 	{
 		for (x = 0; x<BOARD; x++)
@@ -56,14 +56,14 @@ void InitBoard(void)
 			board[y][x] = NONE;
 		}
 	}
-	//ãƒœãƒ¼ãƒ‰ä¸Šã®åˆæœŸã®é»’çŸ³ã¨ç™½çŸ³ã®å ´æ‰€
+	//ƒ{[ƒhã‚Ì‰Šú‚Ì•Î‚Æ”’Î‚ÌêŠ
 	board[BOARD / 2 - 1][BOARD / 2 - 1] = BLACK;
 	board[BOARD / 2][BOARD / 2] = BLACK;
 	board[BOARD / 2 - 1][BOARD / 2] = WHITE;
 	board[BOARD / 2][BOARD / 2 - 1] = WHITE;
-	Number = 0;     //æ‰‹æ•°ã®åˆæœŸåŒ–
+	Number = 0;     //è”‚Ì‰Šú‰»
 }
-//nodoã®åˆæœŸåŒ–
+//nodo‚Ì‰Šú‰»
 void initNodo(Nodo* nodo, int x, int y)
 {
 	nodo->x = x;
@@ -71,59 +71,59 @@ void initNodo(Nodo* nodo, int x, int y)
 	nodo->point = 0;
 	for (int i = 0; i <30; i++) nodo->position[i] = 0;
 }
-//ãƒœãƒ¼ãƒ‰è¡¨ç¤º
+//ƒ{[ƒh•\¦
 void Display(void) {
 	int x, y;
-	//ç›¤é¢ã«ç•ªå·ã‚’ã¤ã‘ã‚‹
+	//”Õ–Ê‚É”Ô†‚ğ‚Â‚¯‚é
 	for (x = 0; x<BOARD; x++) printf("%2d", x + 1);
 	printf("\n");
 	for (y = 0; y<BOARD; y++) {
 		printf("%d", (y + 1));
 		for (x = 0; x<BOARD; x++)
 		{
-			//ãƒœãƒ¼ãƒ‰ä¸ŠãŒ0ã‹ï¼‘ã‹-1ã‹ãã‚Œä»¥å¤–ã§ã‚ã‚Œã°errorã‚’è¿”ã™
+			//ƒ{[ƒhã‚ª0‚©‚P‚©-1‚©‚»‚êˆÈŠO‚Å‚ ‚ê‚Îerror‚ğ•Ô‚·
 			if (board[y][x] == NONE)
-				printf("ãƒ»");
+				printf("E");
 			else if (board[y][x] == BLACK)
-				printf("â—");
+				printf("œ");
 			else if (board[y][x] == WHITE)
-				printf("â—‹");
+				printf("›");
 		}
 		printf("\n");
 	}
 }
-//é›£æ˜“åº¦ã‚’æ±ºã‚ã‚‹
+//“ïˆÕ“x‚ğŒˆ‚ß‚é
 void InputMode() {
 	int lv, check;
 	mode = 0;
 	while (1) {
-		printf("é›£æ˜“åº¦ã‚’æ±ºã‚ã¦ãã ã•ã„\n1:easy,2:normal,3;hard\n");
-		if (scanf("%d", &lv) == 0)//æ•°å€¤ãŒãªã‘ã‚Œã°ã‚¯ãƒªã‚¢
+		printf("“ïˆÕ“x‚ğŒˆ‚ß‚Ä‚­‚¾‚³‚¢\n1:easy,2:normal,3;hard\n");
+		if (scanf("%d", &lv) == 0)//”’l‚ª‚È‚¯‚ê‚ÎƒNƒŠƒA
 		{
 			scanf("%*[^\n]%*c");
-			printf("å…¥åŠ›ã‚¨ãƒ©ãƒ¼\n");
+			printf("“ü—ÍƒGƒ‰[\n");
 		}
 		if (lv == EASY) {
-			printf("easyãƒ¢ãƒ¼ãƒ‰ã§é–‹å§‹ã—ã¾ã™\n");
+			printf("easyƒ‚[ƒh‚ÅŠJn‚µ‚Ü‚·\n");
 			mode = 1;
 			break;
 		}
 		else if (lv == NORMAL) {
-			printf("noramlãƒ¢ãƒ¼ãƒ‰ã§é–‹å§‹ã—ã¾ã™\n");
+			printf("noramlƒ‚[ƒh‚ÅŠJn‚µ‚Ü‚·\n");
 			mode = 2;
 			break;
 		}
 		else if (lv == HARD) {
 			while (1)
 			{
-				printf("æœ¬å½“ã«å®œã—ã„ã§ã™ã­(1;yes,2;no)ï¼Ÿ\n");
-				//2ãŒæŠ¼ã•ã‚Œã‚Œã°é›£æ˜“åº¦æ±ºã‚ã«æˆ»ã‚‹1ãŒæŠ¼ã•ã‚Œã‚Œã°ãã®ã¾ã¾ç¶šè¡Œ
-				if (scanf("%d", &check) == NULL)   //æ•°å€¤ãŒãªã‘ã‚Œã°ã‚¯ãƒªã‚¢
+				printf("–{“–‚É‹X‚µ‚¢‚Å‚·‚Ë(1;yes,2;no)H\n");
+				//1‚ª‰Ÿ‚³‚ê‚ê‚Î“ïˆÕ“xŒˆ‚ß‚É–ß‚é0‚ª‰Ÿ‚³‚ê‚ê‚Î‚»‚Ì‚Ü‚Ü‘±s
+				if (scanf("%d", &check) == NULL)   //”’l‚ª‚È‚¯‚ê‚ÎƒNƒŠƒA
 				{
 					scanf("%*[^\n]%*c");
 				}
 				else if (check == 1) {
-					printf("é–‹å§‹ã—ã¾ã™\n");
+					printf("ŠJn‚µ‚Ü‚·\n");
 					mode = 3;
 					break;
 				}
@@ -136,17 +136,17 @@ void InputMode() {
 
 	}
 }
-//å…ˆè¡Œ(ç™½)å¾Œè¡Œ(é»’)ã‹æ±ºã‚ã‚‹
+//æs(”’)Œãs(•)‚©Œˆ‚ß‚é
 int InputTurn()
 {
 	int ch;
 	while (1)
 	{
-		printf("å…ˆè¡Œ(ç™½)ã‹å¾Œè¡Œ(é»’)ã‹é¸ã‚“ã§ãã ã•ã„ã€‚\n1:å…ˆè¡Œ(ç™½),2:å¾Œè¡Œ(é»’)\n");
-		if (scanf("%d", &ch) == 0)//æ•°å€¤ãŒãªã‘ã‚Œã°ã‚¯ãƒªã‚¢
+		printf("æs(”’)‚©Œãs(•)‚©‘I‚ñ‚Å‚­‚¾‚³‚¢B\n1:æs(”’),2:Œãs(•)\n");
+		if (scanf("%d", &ch) == 0)//”’l‚ª‚È‚¯‚ê‚ÎƒNƒŠƒA
 		{
 			scanf("%*[^\n]%*c");
-			printf("å…¥åŠ›ã‚¨ãƒ©ãƒ¼\n");
+			printf("“ü—ÍƒGƒ‰[\n");
 		}
 		if (ch == 1)
 		{
@@ -160,23 +160,23 @@ int InputTurn()
 		}
 	}
 }
-//ã²ã£ãã‚Šè¿”ã‚‹é§’ãŒã‚ã‚‹ã‹ã‚’è¦‹ã‚‹
+//‚Ğ‚Á‚­‚è•Ô‚é‹î‚ª‚ ‚é‚©‚ğŒ©‚é
 int VectorLook(int x, int y, int turn, int vec)
 {
 	int flag = 0;
 	while (1) {
 		x += vector_x[vec];
 		y += vector_y[vec];
-		//ãƒœãƒ¼ãƒ‰å¤–ã§çµ‚äº†
+		//ƒ{[ƒhŠO‚ÅI—¹
 		if (x<0 || y<0 || x >BOARD - 1 || y > BOARD - 1)return 0;
-		//ç©ºã„ã¦ã„ã‚‹ãƒã‚¹ãŒã‚ã‚Œã°çµ‚äº†
+		//‹ó‚¢‚Ä‚¢‚éƒ}ƒX‚ª‚ ‚ê‚ÎI—¹
 		if (board[y][x] == NONE)return 0;
-		//ç›¸æ‰‹ã®é§’ãŒã‚ã‚Œã°ãƒ•ãƒ©ã‚°ãŒç«‹ã¤
+		//‘Šè‚Ì‹î‚ª‚ ‚ê‚Îƒtƒ‰ƒO‚ª—§‚Â
 		if (board[y][x] == (turn ? BLACK : WHITE)) {
 			flag = 1;
 			continue;
 		}
-		//ãƒ•ãƒ©ã‚°ãŒç«‹ã¦ã°ãƒ«ãƒ¼ãƒ—çµ‚ã‚ã‚Šç«‹ã£ã¦ã„ãªã„å ´åˆç¶šè¡Œ
+		//ƒtƒ‰ƒO‚ª—§‚Ä‚Îƒ‹[ƒvI‚í‚è—§‚Á‚Ä‚¢‚È‚¢ê‡‘±s
 		if (flag == 1)
 		{
 			break;
@@ -185,17 +185,17 @@ int VectorLook(int x, int y, int turn, int vec)
 	}
 	return 1;
 }
-//ç½®ãã“ã¨ãŒã§ãã‚‹ã‹
+//’u‚­‚±‚Æ‚ª‚Å‚«‚é‚©
 int Check(int x, int y, int turn)
 {
 	int vector;
-	//ã²ã£ãã‚Šè¿”ã‚‹ã‹ï¼Ÿ
+	//‚Ğ‚Á‚­‚è•Ô‚é‚©H
 	for (vector = 0; vector<8; vector++) {
 		if (VectorLook(x, y, turn, vector) == 1)return 1;
 	}
 	return 0;
 }
-//è£è¿”ã™å‡¦ç†
+//— •Ô‚·ˆ—
 void Turn(Nodo* nodo, int turn, int vec) {
 	int x = nodo->x;
 	int y = nodo->y;
@@ -203,81 +203,81 @@ void Turn(Nodo* nodo, int turn, int vec) {
 	while (1) {
 		x += vector_x[vec];
 		y += vector_y[vec];
-		//è‡ªåˆ†è‡ªèº«ã‹ã©ã†ã‹è‡ªåˆ†è‡ªèº«ã§ã‚ã‚Œã°å‡¦ç†çµ‚äº†
+		//©•ª©g‚©‚Ç‚¤‚©©•ª©g‚Å‚ ‚ê‚Îˆ—I—¹
 		if (board[y][x] == (turn ? WHITE : BLACK)) {
 			break;
 		}
-		board[y][x] = (turn ? WHITE : BLACK);	//è‡ªåˆ†è‡ªèº«ã§ãªã„ãªã‚‰ã²ã£ãã‚Šè¿”ã™
-		nodo->position[i] = x + y*BOARD;      //è¨˜æ†¶ã™ã‚‹
+		board[y][x] = (turn ? WHITE : BLACK);	//©•ª©g‚Å‚È‚¢‚È‚ç‚Ğ‚Á‚­‚è•Ô‚·
+		nodo->position[i] = x + y*BOARD;      //‹L‰¯‚·‚é
 		i++;
 	}
 	nodo->position[nodo->point = i] = 0;
 }
-//å…¥åŠ›ã‹ã‚‰è£è¿”ã™åˆ¤å®š
+//“ü—Í‚©‚ç— •Ô‚·”»’è
 int InputTurn(Nodo* nodo, int turn) {
 	int vector, flag = 0;
 
-	//å…¨ã¦åŸ‹ã¾ã£ã¦ã„ã‚Œã°ã‚²ãƒ¼ãƒ çµ‚äº†
+	//‘S‚Ä–„‚Ü‚Á‚Ä‚¢‚ê‚ÎƒQ[ƒ€I—¹
 	if (board[nodo->y][nodo->x] != NONE)return 0;
-	//å…¨ã¦ã®æ–¹å‘ã‚’ç¢ºèª
+	//‘S‚Ä‚Ì•ûŒü‚ğŠm”F
 	for (vector = 0; vector<8; vector++) {
-		//ã²ã£ãã‚Šè¿”ã‚‹ç‰©ãŒã‚ã‚Œã°è£è¿”ã™
+		//‚Ğ‚Á‚­‚è•Ô‚é•¨‚ª‚ ‚ê‚Î— •Ô‚·
 		if (VectorLook(nodo->x, nodo->y, turn, vector) == 1) {
-			//è£è¿”ã™å‡¦ç†
+			//— •Ô‚·ˆ—
 			Turn(nodo, turn, vector);
 			flag = 1;
 		}
 	}
 	if (flag == 1) {
-		//ãƒ•ãƒ©ã‚°ãŒç«‹ã£ã¦ã„ã‚Œã°ãƒ•ãƒ©ã‚°ã®ãŸã£ãŸå ´æ‰€ã«ç½®ã
+		//ƒtƒ‰ƒO‚ª—§‚Á‚Ä‚¢‚ê‚Îƒtƒ‰ƒO‚Ì‚½‚Á‚½êŠ‚É’u‚­
 		board[nodo->y][nodo->x] = (turn ? WHITE : BLACK);
 		return 1;
 	}
 	return 0;
 }
-//å…¥åŠ›
+//“ü—Í
 void Input(int turn)
 {
 	int x, y, re;
 	while (1) {
-		//å…¥åŠ›
-		printf("ï¼‘ï½ï¼˜ã¾ã§ã®é–“ã§xè»¸ã‚’å…¥åŠ›ã—ã¦ãã ã•ã„ã€‚(è²´æ–¹ã¯ç™½ã§ã™)>");
-		if (scanf("%d", &x) == 0)//æ•°å€¤ãŒãªã‘ã‚Œã°ã‚¯ãƒªã‚¢
+		//“ü—Í
+		printf("‚P`‚W‚Ü‚Å‚ÌŠÔ‚Åx²‚ğ“ü—Í‚µ‚Ä‚­‚¾‚³‚¢B>");
+		if (scanf("%d", &x) == 0)//”’l‚ª‚È‚¯‚ê‚ÎƒNƒŠƒA
 		{
 			scanf("%*[^\n]%*c");
-			printf("å…¥åŠ›ã‚¨ãƒ©ãƒ¼\n");
+			printf("“ü—ÍƒGƒ‰[\n");
 			continue;
 		}
-		printf("1ï½8ã¾ã§ã®é–“ã§ï½™è»¸ã‚’å…¥åŠ›ã—ã¦ãã ã•ã„ã€‚ï¼ˆè²´æ–¹ã¯ç™½ã§ã™ï¼‰>");
-		if (scanf("%d", &y) == 0)//æ•°å€¤ãŒãªã‘ã‚Œã°ã‚¯ãƒªã‚¢
+		printf("1`8‚Ü‚Å‚ÌŠÔ‚Å‚™²‚ğ“ü—Í‚µ‚Ä‚­‚¾‚³‚¢B>");
+		if (scanf("%d", &y) == 0)//”’l‚ª‚È‚¯‚ê‚ÎƒNƒŠƒA
 		{
 			scanf("%*[^\n]%*c");
-			printf("å…¥åŠ›ã‚¨ãƒ©ãƒ¼\n");
+			printf("“ü—ÍƒGƒ‰[\n");
 			continue;
 		}
 		else if (x>BOARD || x <= 0 || y>BOARD || y <= 0) {
-			printf("ç¯„å›²å†…ã§å…¥åŠ›ã—ã¦ãã ã•ã„\n");
+			printf("”ÍˆÍ“à‚Å“ü—Í‚µ‚Ä‚­‚¾‚³‚¢\n");
 			x = 0; y = 0;
 			continue;
 		}
-		//ç½®ã‘ã‚‹ã‹
+		//’u‚¯‚é‚©
 		if (Check(x - 1, y - 1, turn) == 1) {
 			Nodo nodo;
-			initNodo(&nodo, x - 1, y - 1);              //åˆæœŸãƒãƒ¼ãƒ‰ã«ï½˜ã«1å¼•ã„ãŸå€¤ã¨ã¨yã«ï¼‘å¼•ã„ãŸå€¤ã‚’å…¥ã‚Œã‚‹
-			InputTurn(&nodo, turn);                      //è£è¿”ã™å‡¦ç†
-			Number++;                                  //æ‰‹æ•°ã‚’ï¼‘è¶³ã™
+			initNodo(&nodo, x - 1, y - 1);              //‰Šúƒm[ƒh‚É‚˜‚É1ˆø‚¢‚½’l‚Æ‚Æy‚É‚Pˆø‚¢‚½’l‚ğ“ü‚ê‚é
+			InputTurn(&nodo, turn);                      //— •Ô‚·ˆ—
+			Number++;                                  //è”‚ğ‚P‘«‚·
 			break;
 		}
-		else printf("è£è¿”ã›ã¾ã›ã‚“ã§ã—ãŸã€‚\nç›¸æ‰‹ã®çŸ³ãŒè£è¿”ã›ã‚‹å ´æ‰€ã«ãŠã„ã¦ãã ã•ã„ã€‚\n");
+		else printf("— •Ô‚¹‚Ü‚¹‚ñ‚Å‚µ‚½B\n‘Šè‚ÌÎ‚ª— •Ô‚¹‚éêŠ‚É‚¨‚¢‚Ä‚­‚¾‚³‚¢B\n");
 		x = 0; y = 0;
 	}
 
 }
-//ã‚ªã‚»ãƒ­ã®çŠ¶æ…‹ã‚’å…ƒã¸
+//ƒIƒZƒ‚Ìó‘Ô‚ğŒ³‚Ö
 void Reverse(Nodo nodo)
 {
 	int i = 0;
-	//ãƒãƒ¼ãƒ‰ãƒã‚¸ã‚·ãƒ§ãƒ³ã«æ•°å€¤ãŒå…¥ã£ã¦ã„ã‚Œã°ãã®ãƒã‚¸ã‚·ãƒ§ãƒ³ã«-1ã‚’æ›ã‘ã¦æˆ»ã™
+	//ƒm[ƒhƒ|ƒWƒVƒ‡ƒ“‚É”’l‚ª“ü‚Á‚Ä‚¢‚ê‚Î‚»‚Ìƒ|ƒWƒVƒ‡ƒ“‚É-1‚ğŠ|‚¯‚Ä–ß‚·
 	while (nodo.position[i]> 0) {
 		int x = nodo.position[i] % 8;
 		int y = nodo.position[i] / 8;
@@ -289,7 +289,7 @@ void Reverse(Nodo nodo)
 		}
 	}
 }
-//è©•ä¾¡ã™ã‚‹å ´æ‰€
+//•]‰¿‚·‚éêŠ
 int ValuePlace()
 {
 	int x, y, value = 0;
@@ -298,58 +298,58 @@ int ValuePlace()
 			value += board[y][x] * Value[x][y];
 	return(-value);
 }
-//æ‰‹ãŒã‚ã‚‹å ´æ‰€ã®æ•°ã§ç›¤é¢è©•ä¾¡
+//è‚ª‚ ‚éêŠ‚Ì”‚Å”Õ–Ê•]‰¿
 int ValueDropDown(int turn)
 {
 	int x, y, value = 0;
 	for (y = 0; y < BOARD; y++)
 		for (x = 0; x < BOARD; x++)
-			if (Check(x, y, turn))value += 1;     //ç½®ã‘ã‚Œã°è©•ä¾¡ã«ï¼‘è¶³ã™
+			if (Check(x, y, turn))value += 1;     //’u‚¯‚ê‚Î•]‰¿‚É‚P‘«‚·
 	if (turn != 0)return(3 * value);
 	else return(-3 * value);
 }
-//ç›¤é¢ã‚’ç›¸æ‰‹ã¨ã®çŸ³ã®æ•°ã§è©•ä¾¡ã™ã‚‹
+//”Õ–Ê‚ğ‘Šè‚Æ‚ÌÎ‚Ì”‚Å•]‰¿‚·‚é
 int ValueBoardNum() {
 	int x, y, value = 0;
 	for (y = 0; y < BOARD; y++)
 		for (x = 0; x < BOARD; x++)value += board[y][x];
 	return(value*-1);
 }
-//ç›¤é¢è©•ä¾¡
+//”Õ–Ê•]‰¿
 int ValueBoard(int turn) {
 	int value = 0;
-	if (Number <= MIDDLE)          //åºç›¤
+	if (Number <= MIDDLE)          //˜”Õ
 	{
 		value += ValuePlace();
 		value += ValueDropDown(turn);
 	}
-	else if (Number <= FINISH)     //ä¸­ç›¤
+	else if (Number <= FINISH)     //’†”Õ
 	{
 		value += ValuePlace();
 		value += ValueDropDown(turn);
 	}
-	else value += ValueBoardNum();  //çµ‚ç›¤
+	else value += ValueBoardNum();  //I”Õ
 
 	if (turn == 1)return(value);
 	else return(-value);
 
 }
-//Î±-Î²æ³•ã§æ¢ç´¢ã§æœ€å–„ã®ç­–ã‚’æ¢ç´¢
+//ƒ¿-ƒÀ–@‚Å’Tõ‚ÅÅ‘P‚Ìô‚ğ’Tõ
 int AB(bool flag, int lv, bool put, int turn, int mode, int al, int be)
 {
 	int temp, x, y, vest_x, vest_y;
 	bool flagput = false;
 	Nodo nodo;
-	//ãƒ¬ãƒ™ãƒ«ãŒï¼ã®ã¨ãï¼ã‚’è¿”ã™
+	//ƒŒƒxƒ‹‚ª‚O‚Ì‚Æ‚«‚O‚ğ•Ô‚·
 	if (lv == 0) {
-		//ãƒ¢ãƒ¼ãƒ‰ï¼‘ã§ã¯ï¼ï¼’ã€ï¼“ã§ã¯æ€è€ƒã‚’ã™ã‚‹
+		//ƒ‚[ƒh‚P‚Å‚Í‚O‚QA‚R‚Å‚Ívl‚ğ‚·‚é
 		if (mode == 1) return 0;
 		else if (mode == 2 || mode == 3) return(ValueBoard(turn));
 	}
-	//ãƒ•ãƒ©ã‚°ãŒç«‹ã¦ã°-9999çµŒãŸãªã‘ã‚Œã°9999
+	//ƒtƒ‰ƒO‚ª—§‚Ä‚Î-9999Œo‚½‚È‚¯‚ê‚Î9999
 	if (flag)al = -9999;
 	else al = 9999;
-	//ç›¤é¢è©•ä¾¡
+	//”Õ–Ê•]‰¿
 	for (y = 0; y < BOARD; y++)
 	{
 		for (x = 0; x < BOARD; x++)
@@ -357,13 +357,13 @@ int AB(bool flag, int lv, bool put, int turn, int mode, int al, int be)
 			if (Check(x, y, turn) == 1)
 			{
 				flagput = true;
-				initNodo(&nodo, x, y);              //è¨˜æ†¶ã™ã‚‹
-				InputTurn(&nodo, turn);             //çŸ³ã‚’ç½®ã
-				turn = (turn + 1) % 2;              //æ‰‹ç•ªã‚’ã‹ãˆã‚‹
-				temp = AB(!flag, lv - 1, true, turn, mode, al, be); //æ‰‹ç•ªã‚’ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã¸å¤‰ãˆãŸãŸã‚ãƒ•ãƒ©ã‚°ã‚’falseã¸
-				Reverse(nodo);                                  //å…ƒã«æˆ»ã™
+				initNodo(&nodo, x, y);              //‹L‰¯‚·‚é
+				InputTurn(&nodo, turn);             //Î‚ğ’u‚­
+				turn = (turn + 1) % 2;              //è”Ô‚ğ‚©‚¦‚é
+				temp = AB(!flag, lv - 1, true, turn, mode, al, be); //è”Ô‚ğƒvƒŒƒCƒ„[‚Ö•Ï‚¦‚½‚½‚ßƒtƒ‰ƒO‚ğfalse‚Ö
+				Reverse(nodo);                                  //Œ³‚É–ß‚·
 				turn = (turn + 1) % 2;
-				//ãƒ•ãƒ©ã‚°ãŒç«‹ã¡tempã®æ–¹ãŒÎ±è©•ä¾¡ã‚ˆã‚Šå¤§ãããªã‚‹ã‹é€†ã§ã‚ã‚Œã°ãƒ™ã‚¹ãƒˆã«ã„ã‚Œã‚‹
+				//ƒtƒ‰ƒO‚ª—§‚¿temp‚Ì•û‚ªƒ¿•]‰¿‚æ‚è‘å‚«‚­‚È‚é‚©‹t‚Å‚ ‚ê‚ÎƒxƒXƒg‚É‚¢‚ê‚é
 				if (flag) {
 					if (temp >= al)
 					{
@@ -371,7 +371,7 @@ int AB(bool flag, int lv, bool put, int turn, int mode, int al, int be)
 						vest_x = x;
 						vest_y = y;
 					}
-					//Î±ã®æ–¹ãŒÎ²ã‚ˆã‚Šå¤§ãã‘ã‚Œã°Î±ã‚’å…¥ã‚Œã‚‹
+					//ƒ¿‚Ì•û‚ªƒÀ‚æ‚è‘å‚«‚¯‚ê‚Îƒ¿‚ğ“ü‚ê‚é
 					if (al > be)return(al);
 				}
 				else
@@ -387,7 +387,7 @@ int AB(bool flag, int lv, bool put, int turn, int mode, int al, int be)
 			}
 		}
 	}
-	//ãƒ¬ãƒ™ãƒ«ãŒæ¢ç´¢æœ€å¤§ã§ã‚ã‚Œã°ãã®å€¤ã‚’å…¥ã‚Œã‚‹
+	//ƒŒƒxƒ‹‚ª’TõÅ‘å‚Å‚ ‚ê‚Î‚»‚Ì’l‚ğ“ü‚ê‚é
 	if (flagput)
 	{
 		if ((lv == N_SEARCH&&mode == 1) || (lv == N_SEARCH&&mode == 2))return(vest_x + vest_y*BOARD);
@@ -411,11 +411,11 @@ void AI(int turn, int mode)
 	int x, y;
 	Nodo nodo;
 	if (mode == 1 || mode == 2) {
-		y = AB(true, N_SEARCH, true, turn, mode, -9999, 9999);   //æœ€å–„ç­–
+		y = AB(true, N_SEARCH, true, turn, mode, -9999, 9999);   //Å‘Pô
 	}
 	else if (mode == 3)
 	{
-		y = AB(true, H_SEARCH, true, turn, mode, -9999, 9999);   //æœ€å–„ç­–
+		y = AB(true, H_SEARCH, true, turn, mode, -9999, 9999);   //Å‘Pô
 	}
 	if (0 > y || y >= BOARD*BOARD)
 	{
@@ -424,54 +424,54 @@ void AI(int turn, int mode)
 	}
 	x = y % BOARD;
 	y = y / BOARD;
-	initNodo(&nodo, x, y);                                //åˆæœŸãƒãƒ¼ãƒ‰ã«xã¨yã®å€¤ã‚’å…¥ã‚Œã‚‹
-	InputTurn(&nodo, turn);                               //è£è¿”ã™ 
-	Number++;                                             //æ‰‹æ•°ã‚’ï¼‘å¢—ã‚„ã™
+	initNodo(&nodo, x, y);                                //‰Šúƒm[ƒh‚Éx‚Æy‚Ì’l‚ğ“ü‚ê‚é
+	InputTurn(&nodo, turn);                               //— •Ô‚· 
+	Number++;                                             //è”‚ğ‚P‘‚â‚·
 }
-//ã‚²ãƒ¼ãƒ çµ‚äº†ç¢ºèªã®å‡¦ç†
+//ƒQ[ƒ€I—¹Šm”F‚Ìˆ—
 int CheckEnd(int turn)
 {
 	int x, y;
-	//å…¨ã¦ã®å ´æ‰€ã‚’ç¢ºèª
+	//‘S‚Ä‚ÌêŠ‚ğŠm”F
 	for (y = 0; y<BOARD; y++)
 	{
 		for (x = 0; x<BOARD; x++)
 		{
-			//ã‚‚ã—å ´æ‰€ãŒã‚ã‚Œã°ç¶šè¡Œ
+			//‚à‚µêŠ‚ª‚ ‚ê‚Î‘±s
 			if (board[y][x] == NONE &&Check(x, y, turn) == 1)return 0;
 		}
 	}
-	//å ´æ‰€ãŒç„¡ã‘ã‚Œã°ä»Šç¾åœ¨ã®ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚’äº¤ä»£ã—ã¦æ›´ã«æ¢ç´¢
+	//êŠ‚ª–³‚¯‚ê‚Î¡Œ»İ‚ÌƒvƒŒƒCƒ„[‚ğŒğ‘ã‚µ‚ÄX‚É’Tõ
 	turn = (turn + 1) % 2;
 	for (y = 0; y<BOARD; y++)
 	{
 		for (x = 0; x<BOARD; x++)
 		{
-			//ã‚‚ã—å ´æ‰€ãŒã‚ã‚Œã°ç¶šè¡Œ
+			//‚à‚µêŠ‚ª‚ ‚ê‚Î‘±s
 			if (board[y][x] == NONE &&Check(x, y, turn) == 1)return 1;
 		}
 	}
 }
-//å‹è€…ã®åˆ¤å®š
+//ŸÒ‚Ì”»’è
 void Win() {
 	int x, y, p = 0, n = 0;
-	//çŸ³ã‚’æ•°ãˆã‚‹
+	//Î‚ğ”‚¦‚é
 	for (y = 0; y<BOARD; y++) {
 		for (x = 0; x<BOARD; x++) {
 			if (board[y][x] == BLACK) p++;
 			else if (board[y][x] == WHITE)n++;
 		}
 	}
-	//å‹è€…è¡¨ç¤º
-	if (p<n)printf("ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®å‹åˆ©ã§ã™ã€‚\nãŠã‚ã§ã¨ã†ã”ã–ã„ã¾ã™ã€‚\n");
-	else if (p>n)printf("ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®è² ã‘ã§ã™\n");
-	else printf("å¼•ãåˆ†ã‘ã§ã™\n");
+	//ŸÒ•\¦
+	if (p<n)printf("ƒvƒŒƒCƒ„[‚ÌŸ—˜‚Å‚·B\n‚¨‚ß‚Å‚Æ‚¤‚²‚´‚¢‚Ü‚·B\n");
+	else if (p>n)printf("ƒvƒŒƒCƒ„[‚Ì•‰‚¯‚Å‚·\n");
+	else printf("ˆø‚«•ª‚¯‚Å‚·\n");
 }
 
 int main() {
 	int turn = 0, i_turn,Ai_turn;
-	InitBoard();       //åˆæœŸåŒ–é–¢æ•°
-	 //å…ˆè¡Œå¾Œè¡Œç¢ºèª
+	InitBoard();       //‰Šú‰»ŠÖ”
+	 //æsŒãsŠm”F
 	if (InputTurn() == 1)
 	{
 		i_turn = 0;
@@ -482,35 +482,35 @@ int main() {
 		i_turn = 1;
 		Ai_turn = 0;
 	}
-	//ãƒ¢ãƒ¼ãƒ‰é–¢æ•°
+	//ƒ‚[ƒhŠÖ”
 	InputMode();
-	//ãƒ¢ãƒ¼ãƒ‰ãŒé¸ã°ã‚Œã¦ã„ãŸã‚‰é–‹å§‹
+	//ƒ‚[ƒh‚ª‘I‚Î‚ê‚Ä‚¢‚½‚çŠJn
 	if (mode == 1 || mode == 2 || mode == 3)
 	{
 		while (turn < 2) {
 			if (turn == i_turn) {
-				printf("è²´æ–¹ã®ç•ªã§ã™\n");
-				Display();                //è¡¨ç¤ºé–¢æ•°
+				printf("‹M•û‚Ì”Ô‚Å‚·\n");
+				Display();                //•\¦ŠÖ”
 			}
-			else printf("è©¦è¡Œä¸­ãƒ»ãƒ»ãƒ»\n");
-			if (turn == i_turn) Input(turn);    //å…¥åŠ›é–¢æ•°
+			else printf("s’†EEE\n");
+			if (turn == i_turn) Input(turn);    //“ü—ÍŠÖ”
 			else if (turn == Ai_turn) {
-				AI(turn, mode);            //ç°¡å˜ãªAIé–¢æ•°
+				AI(Ai_turn, mode);            //ŠÈ’P‚ÈAIŠÖ”
 
 			}
-			turn = (turn + 1) % 2;             //äº¤ä»£
-	      //ã‚‚ã—ã‚¨ãƒ³ãƒ‰é–¢æ•°ãŒï¼‘ãªã‚‰ã°ãƒ‘ã‚¹ï¼’ãªã‚‰ã°çµ‚äº†
+			turn = (turn + 1) % 2;             //Œğ‘ã
+	      //‚à‚µƒGƒ“ƒhŠÖ”‚ª‚P‚È‚ç‚ÎƒpƒX‚Q‚È‚ç‚ÎI—¹
 			if (CheckEnd(turn) == 1) {
-				printf("ãƒ‘ã‚¹\n");
+				printf("ƒpƒX\n");
 				turn = (turn + 1) % 2;
 			}
 			else if (CheckEnd(turn) == 2) {
-				printf("ã‚²ãƒ¼ãƒ çµ‚äº†\n");
+				printf("ƒQ[ƒ€I—¹\n");
 				turn = 2;
 			}
 
 		}
-		Win();                      //å‹åˆ©é–¢æ•°
+		Win();                      //Ÿ—˜ŠÖ”
 		return 0;
 	}
 }
