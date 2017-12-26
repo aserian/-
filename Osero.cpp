@@ -429,7 +429,7 @@ void AI(int turn, int mode)
 	Number++;                                             //手数を１増やす
 }
 //ゲーム終了確認の処理
-int CheckEnd(int turn)
+int End(int turn)
 {
 	int x, y;
 	//全ての場所を確認
@@ -439,9 +439,11 @@ int CheckEnd(int turn)
 		{
 			//もし場所があれば続行
 			if (board[y][x] == NONE &&Check(x, y, turn) == 1)return 0;
+			
 		}
 	}
 	//場所が無ければ今現在のプレイヤーを交代して更に探索
+	returnc+=1;
 	turn = (turn + 1) % 2;
 	for (y = 0; y<BOARD; y++)
 	{
@@ -451,6 +453,7 @@ int CheckEnd(int turn)
 			if (board[y][x] == NONE &&Check(x, y, turn) == 1)return 1;
 		}
 	}
+	return 2;
 }
 //勝者の判定
 void Win() {
@@ -498,13 +501,14 @@ int main() {
 				AI(Ai_turn, mode);            //簡単なAI関数
 
 			}
-			turn = (turn + 1) % 2;             //交代
-	      //もしエンド関数が１ならばパス２ならば終了
-			if (CheckEnd(turn) == 1) {
+	      //もしエンド関数が0ならば続行１ならばパス２ならば終了
+			if(End(turn)==0){
+				turn = (turn + 1) % 2;             //交代
+			}else if (End(turn) == 1) {
 				printf("パス\n");
 				turn = (turn + 1) % 2;
 			}
-			else if (CheckEnd(turn) == 2) {
+			else if (End(turn) == 2) {
 				printf("ゲーム終了\n");
 				break;
 			}
