@@ -443,7 +443,6 @@ int End(int turn)
 		}
 	}
 	//場所が無ければ今現在のプレイヤーを交代して更に探索
-	returnc+=1;
 	turn = (turn + 1) % 2;
 	for (y = 0; y<BOARD; y++)
 	{
