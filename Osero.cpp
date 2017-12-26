@@ -505,6 +505,7 @@ int main() {
 			if(End(turn)==0){
 				turn = (turn + 1) % 2;             //交代
 			}else if (End(turn) == 1) {
+				turn = (turn + 1) % 2;
 				printf("パス\n");
 				turn = (turn + 1) % 2;
 			}
