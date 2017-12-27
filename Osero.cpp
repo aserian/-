@@ -64,7 +64,7 @@ void InitBoard(void)
 	Number = 0;     //手数の初期化
 }
 //nodoの初期化
-void initNodo(Nodo* nodo, int x, int y)
+void InitNodo(Nodo* nodo, int x, int y)
 {
 	nodo->x = x;
 	nodo->y = y;
@@ -257,7 +257,7 @@ void Input(int turn)
 		//置けるか
 		if (Check(x - 1, y - 1, turn) == 1) {
 			Nodo nodo;
-			initNodo(&nodo, x - 1, y - 1);              //初期ノードにｘに1引いた値ととyに１引いた値を入れる
+			InitNodo(&nodo, x - 1, y - 1);              //初期ノードにｘに1引いた値ととyに１引いた値を入れる
 			InputTurn(&nodo, turn);                      //裏返す処理
 			Number++;                                  //手数を１足す
 			break;
@@ -351,7 +351,7 @@ int AB(bool flag, int lv, bool put, int turn, int mode, int al, int be)
 			if (Check(x, y, turn) == 1)
 			{
 				flagput = true;
-				initNodo(&nodo, x, y);              //記憶する
+				InitNodo(&nodo, x, y);              //記憶する
 				InputTurn(&nodo, turn);             //石を置く
 				turn = (turn + 1) % 2;              //手番をかえる
 				temp = AB(!flag, lv - 1, true, turn, mode, al, be); //手番をプレイヤーへ変えたためフラグをfalseへ
@@ -418,7 +418,7 @@ void AI(int turn, int mode)
 	}
 	x = y % BOARD;
 	y = y / BOARD;
-	initNodo(&nodo, x, y);                                //初期ノードにxとyの値を入れる
+	InitNodo(&nodo, x, y);                                //初期ノードにxとyの値を入れる
 	InputTurn(&nodo, turn);                               //裏返す 
 	Number++;                                             //手数を１増やす
 }
