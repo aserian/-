@@ -151,12 +151,12 @@ int InputTurn()
 		if (ch == 1)
 		{
 			return 1;
-			break;
+			
 		}
 		else if (ch == 2)
 		{
 			return 0;
-			break;
+		
 		}
 	}
 }
