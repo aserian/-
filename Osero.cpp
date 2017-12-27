@@ -465,8 +465,8 @@ void Win() {
 		}
 	}
 	//勝者表示
-	if (p<n)printf("ホワイトの勝利です。\nおめでとうございます。\n");
-	else if (p>n)printf("ブラックの負けです\n");
+	if (p<n)printf("ホワイトの勝利です。\n");
+	else if (p>n)printf("ブラックの勝利です\n");
 	else printf("引き分けです\n");
 }
 
