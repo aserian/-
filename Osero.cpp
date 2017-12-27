@@ -81,7 +81,7 @@ void Display(void) {
 		printf("%d", (y + 1));
 		for (x = 0; x<BOARD; x++)
 		{
-			//ボード上が0か１か-1かそれ以外であればerrorを返す
+			//ボード上が0であれば・か１であれば黒か-1であれば白
 			if (board[y][x] == NONE)
 				printf("・");
 			else if (board[y][x] == BLACK)
