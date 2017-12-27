@@ -456,17 +456,17 @@ int End(int turn)
 }
 //勝者の判定
 void Win() {
-	int x, y, p = 0, n = 0;
+	int x, y, b = 0, w = 0;
 	//石を数える
 	for (y = 0; y<BOARD; y++) {
 		for (x = 0; x<BOARD; x++) {
-			if (board[y][x] == BLACK) p++;
-			else if (board[y][x] == WHITE)n++;
+			if (board[y][x] == BLACK) b++;
+			else if (board[y][x] == WHITE)w++;
 		}
 	}
 	//勝者表示
-	if (p<n)printf("ホワイトの勝利です。\n");
-	else if (p>n)printf("ブラックの勝利です\n");
+	if (b<w)printf("ホワイトの勝利です。\n");
+	else if (b>w)printf("ブラックの勝利です\n");
 	else printf("引き分けです\n");
 }
 
