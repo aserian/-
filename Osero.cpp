@@ -148,16 +148,10 @@ int InputTurn()
 			scanf("%*[^\n]%*c");
 			printf("入力エラー\n");
 		}
-		if (ch == 1)
-		{
-			return 1;
-			
-		}
-		else if (ch == 2)
-		{
-			return 0;
+		if (ch == 1)return 1;
+		else if (ch == 2)return 0;
 		
-		}
+		
 	}
 }
 //ひっくり返る駒があるかを見る
