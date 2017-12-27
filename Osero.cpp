@@ -357,7 +357,7 @@ int AB(bool flag, int lv, bool put, int turn, int mode, int al, int be)
 				temp = AB(!flag, lv - 1, true, turn, mode, al, be); //手番をプレイヤーへ変えたためフラグをfalseへ
 				Reverse(nodo);                                  //元に戻す
 				turn = (turn + 1) % 2;
-				//フラグが立ちtempの方がα評価より大きくなるかb評価より小さければであればベストにいれる
+				//フラグが立ちtempの方がα評価より大きくなるかb評価より小さければベストにいれる
 				if (flag) {
 					if (temp >= al)
 					{
