@@ -102,6 +102,7 @@ void InputMode() {
 		{
 			scanf("%*[^\n]%*c");
 			printf("入力エラー\n");
+			continue;
 		}
 		if (lv == EASY) {
 			printf("easyモードで開始します\n");
@@ -121,6 +122,8 @@ void InputMode() {
 				if (scanf("%d", &check) == NULL)   //数値がなければクリア
 				{
 					scanf("%*[^\n]%*c");
+					printf("入力エラー\n");
+					continue;
 				}
 				else if (check == 1) {
 					printf("開始します\n");
@@ -147,6 +150,7 @@ int InputTurn()
 		{
 			scanf("%*[^\n]%*c");
 			printf("入力エラー\n");
+			continue;
 		}
 		if (ch == 1)return 1;
 		else if (ch == 2)return 0;
