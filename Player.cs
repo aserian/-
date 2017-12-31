@@ -6,7 +6,7 @@ public class Player : MonoBehaviour {
 	public float speed = 4f;  //速さ
 	public int power =1;　//攻撃力
 	public float jumpPower = 10; //ジャンプ力
-	[System.NonSerialized] public float dir =1.0f; //向き
+　　　　 public float dir =1.0f; //向き
 	public GameObject bullet;  //弾オブジェクト
 	public GameObject player;　　//プレイヤーオブジェクト
 	public   int MAX_JUMP_COUNT = 2; //最大ジャンプ回数
