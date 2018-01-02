@@ -413,7 +413,7 @@ void AI(int turn, int mode)
 	}
 	else if (mode == 3)
 	{
-		y = AB(true, H_SEARCH, true, turn, mode, -9999, 9999);   //最善策
+		y = AB(true, H_SEARCH, true, turn, mode, -9999, 9999);   
 	}
 	if (0 > y || y >= BOARD*BOARD)
 	{
