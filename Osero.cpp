@@ -36,7 +36,7 @@ typedef struct
 {
 	int x, y;           //石の場所
 	int point;          //返った石の数
-	int position[30];   //石のひっくり返った場所
+	int position[64];   //石のひっくり返った場所
 }Nodo;
 int Number;   //手数
 int board[BOARD][BOARD];  //ボード
@@ -69,7 +69,7 @@ void InitNodo(Nodo* nodo, int x, int y)
 	nodo->x = x;
 	nodo->y = y;
 	nodo->point = 0;
-	for (int i = 0; i <30; i++) nodo->position[i] = 0;
+	for (int i = 0; i <64; i++) nodo->position[i] = 0;
 }
 //ボード表示
 void Display(void) {
