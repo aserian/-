@@ -32,7 +32,7 @@ const int Value[BOARD][BOARD] = {
 	{ 50,-10,  4, -1, -1,  4,-10, 50, }
 };
 //石の変化の情報を置く構造体
-typedef struct info
+typedef struct 
 {
 	int x, y;           //石の場所
 	int point;          //返った石の数
