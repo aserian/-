@@ -261,7 +261,7 @@ void Input(int turn)
 		//置けるか
 		if (Check(x - 1, y - 1, turn) == 1) {
 			Nodo nodo;
-			InitNodo(&nodo, x - 1, y - 1);              //初期ノードにｘに1引いた値ととyに１引いた値を入れる
+			InitNodo(&nodo, x - 1, y - 1);              //ノードにｘに1引いた値ととyに１引いた値を入れる
 			InputTurn(&nodo, turn);                      //裏返す処理
 			Number++;                                  //手数を１足す
 			break;
@@ -422,7 +422,7 @@ void AI(int turn, int mode)
 	}
 	x = y % BOARD;
 	y = y / BOARD;
-	InitNodo(&nodo, x, y);                                //初期ノードにxとyの値を入れる
+	InitNodo(&nodo, x, y);                                //ノードにxとyの値を入れる
 	InputTurn(&nodo, turn);                               //裏返す 
 	Number++;                                             //手数を１増やす
 }
