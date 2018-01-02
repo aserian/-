@@ -206,7 +206,7 @@ void Turn(Nodo* nodo, int turn, int vec) {
 			break;
 		}
 		board[y][x] = (turn ? WHITE : BLACK);	//自分自身でないならひっくり返す
-		nodo->position[i] = x + y*BOARD;      //記憶する
+		nodo->position[i] = x + y*BOARD;      //ひっくり返った場所を記憶する
 		i++;
 	}
 	nodo->position[nodo->point = i] = 0;
