@@ -186,10 +186,7 @@ int VectorLook(int x, int y, int turn, int vec)
 			continue;
 		}
 		//フラグが立てばループ終わり立っていない場合続行
-		if (flag == 1)
-		{
-			break;
-		}
+		if (flag == 1)break;
 		return 0;
 	}
 	return 1;
