@@ -315,7 +315,7 @@ int ValueDropDown(int turn)
 	for (y = 0; y < BOARD; y++)
 		for (x = 0; x < BOARD; x++)
 			if (Check(x, y, turn))value += 1;     //置ければ評価に１足す
-												  //ターンがAiであれば、3を掛けてそのまま返しそれ以外であればマイナスで返す
+//ターンがAiであれば、3を掛けてそのまま返しそれ以外であればマイナスで返す
 	if (turn == Ai_turn)return(3 * value);
 	else return(-3 * value);
 }
