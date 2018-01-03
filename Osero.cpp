@@ -32,15 +32,18 @@ const int Value[BOARD][BOARD] = {
 	{ 50,-10,  4, -1, -1,  4,-10, 50, }
 };
 //石の変化の情報を置く構造体
-typedef struct 
+typedef struct
 {
 	int x, y;           //石の場所
 	int point;          //返った石の数
 	int position[64];   //石のひっくり返った場所
 }Nodo;
-int Number;   　　　　　　　　//手数
-int board[BOARD][BOARD];  　 //ボード
-int mode;                 　 //モード
+int Number;                  //手数
+int board[BOARD][BOARD];     //ボード
+int mode;                   //モード
+//ターン
+int Ai_turn;    //AI
+int i_turn;     //Player
 //移動量
 int vector_y[] = { -1,-1,0,1,1,1,0,-1 };
 int vector_x[] = { 0,1,1,1,0,-1,-1,-1 };
@@ -140,7 +143,7 @@ void InputMode() {
 	}
 }
 //先行(白)後行(黒)か決める
-int InputTurn()
+void InputTurn()
 {
 	int ch;
 	while (1)
@@ -152,10 +155,16 @@ int InputTurn()
 			printf("入力エラー\n");
 			continue;
 		}
-		if (ch == 1)return 1;
-		else if (ch == 2)return 0;
-		
-		
+		if (ch == 1)
+		{
+			i_turn = 0;
+			Ai_turn = 1;
+			break;
+		}else if (ch == 2){
+			i_turn = 1;
+			Ai_turn = 0;
+			break;
+		}
 	}
 }
 //ひっくり返る駒があるかを見る
@@ -304,7 +313,7 @@ int ValueDropDown(int turn)
 	for (y = 0; y < BOARD; y++)
 		for (x = 0; x < BOARD; x++)
 			if (Check(x, y, turn))value += 1;     //置ければ評価に１足す
-	if (turn != 0)return(3 * value);
+	if (turn != i_turn)return(3 * value);
 	else return(-3 * value);
 }
 //盤面を相手との石の数で評価する
@@ -329,7 +338,7 @@ int ValueBoard(int turn) {
 	}
 	else value += ValueBoardNum();  //終盤
 
-	if (turn == 1)return(value);
+	if (turn == Ai_turn)return(value);
 	else return(-value);
 
 }
@@ -372,7 +381,8 @@ int AB(bool flag, int lv, bool put, int turn, int mode, int al, int be)
 					}
 					//αの方がβより大きければαを評価値として返す
 					if (al > be)return(al);
-				}else{
+				}
+				else {
 					//フラグが立たなかった時、Playerよりβの評価がたかければベストに入れる
 					if (temp <= be)
 					{
@@ -396,7 +406,7 @@ int AB(bool flag, int lv, bool put, int turn, int mode, int al, int be)
 		else return(be);
 	}
 	else if (!put&&mode == 1) return 0;
-	else if (!put&&(mode == 2||mode==3))return (ValueBoard(turn));
+	else if (!put && (mode == 2 || mode == 3))return (ValueBoard(turn));
 	else
 	{
 		turn = (turn + 1) % 2;
@@ -416,7 +426,7 @@ void AI(int turn, int mode)
 	}
 	else if (mode == 3)
 	{
-		y = AB(true, H_SEARCH, true, turn, mode, -9999, 9999);   
+		y = AB(true, H_SEARCH, true, turn, mode, -9999, 9999);
 	}
 	if (0 > y || y >= BOARD*BOARD)
 	{
@@ -440,7 +450,7 @@ int End(int turn)
 		{
 			//もし場所があれば続行
 			if (board[y][x] == NONE &&Check(x, y, turn) == 1)return 0;
-			
+
 		}
 	}
 	//場所が無ければ今現在のプレイヤーを交代して更に探索
@@ -472,19 +482,9 @@ void Win() {
 }
 
 int main() {
-	int turn = 0, i_turn,Ai_turn;
+	int turn = 0;
 	InitBoard();       //初期化関数
-	 //先行後行確認
-	if (InputTurn() == 1)
-	{
-		i_turn = 0;
-		Ai_turn = 1;
-	}
-	else
-	{
-		i_turn = 1;
-		Ai_turn = 0;
-	}
+	InputTurn();	   //先行後行確認
 	//モード関数
 	InputMode();
 	//モードが選ばれていたら開始
@@ -501,14 +501,16 @@ int main() {
 				AI(Ai_turn, mode);            //AI関数
 
 			}
-	      //もしエンド関数が0ならば続行１ならばパス２ならば終了
-			if(End(turn)==0){
+			//もしエンド関数が0ならば続行１ならばパス２ならば終了
+			if (End(turn) == 0) {
 				turn = (turn + 1) % 2;             //交代
-			}else if (End(turn) == 1) {
+			}
+			else if (End(turn) == 1) {
 				turn = (turn + 1) % 2;
 				printf("パス\n");
 				turn = (turn + 1) % 2;
-			}else if (End(turn) == 2) {
+			}
+			else if (End(turn) == 2) {
 				printf("ゲーム終了\n");
 				break;
 			}
