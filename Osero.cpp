@@ -275,7 +275,7 @@ void Input(int turn)
 void Reverse(Nodo nodo)
 {
 	int i = 0;
-	//ノードポジションに数値が入っていればそのポジションに-1を掛けて戻す
+	//ノードポジションに数値が入っていればそのポジションに-1を掛けて戻すそれ以外は0を入れる
 	while (nodo.position[i]> 0) {
 		int x = nodo.position[i] % 8;
 		int y = nodo.position[i] / 8;
@@ -291,6 +291,7 @@ void Reverse(Nodo nodo)
 int ValuePlace()
 {
 	int x, y, value = 0;
+	//評価する場所を探索しその値をvalueの入れていく
 	for (y = 0; y < BOARD; y++)
 		for (x = 0; x < BOARD; x++)
 			value += board[y][x] * Value[x][y];
