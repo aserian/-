@@ -12,7 +12,7 @@
 #define NORMAL 2
 #define HARD 3
 //中盤終盤の手数
-#define MIDDLE 15
+#define MIDLE 15
 #define FINISH 48
 //探索手数
 #define N_SEARCH 5
