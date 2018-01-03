@@ -142,7 +142,7 @@ void InputMode() {
 
 	}
 }
-//先行(白)後行(黒)か決める
+//先攻(白)後攻(黒)か決める
 void InputTurn()
 {
 	int ch;
