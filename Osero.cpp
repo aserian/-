@@ -41,10 +41,10 @@ typedef struct
 int Number;                  //手数
 int board[BOARD][BOARD];     //ボード
 int mode;                   //モード
-							//ターン
+//ターン
 int Ai_turn;    //AI
 int i_turn;     //Player
-				//移動量
+//移動量
 int vector_y[] = { -1,-1,0,1,1,1,0,-1 };
 int vector_x[] = { 0,1,1,1,0,-1,-1,-1 };
 //ボードの初期化
