@@ -38,9 +38,9 @@ typedef struct
 	int point;          //返った石の数
 	int position[64];   //石のひっくり返った場所
 }Nodo;
-int Number;   //手数
-int board[BOARD][BOARD];  //ボード
-int mode;                  //モード
+int Number;   　　　　　　　　//手数
+int board[BOARD][BOARD];  　 //ボード
+int mode;                 　 //モード
 //移動量
 int vector_y[] = { -1,-1,0,1,1,1,0,-1 };
 int vector_x[] = { 0,1,1,1,0,-1,-1,-1 };
