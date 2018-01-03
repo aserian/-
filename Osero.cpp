@@ -119,7 +119,7 @@ void InputMode() {
 			{
 				printf("本当に宜しいですね(1;yes,2;no)？\n");
 				//1が押されれば難易度決めに戻る0が押されればそのまま続行
-				if (scanf("%d", &check) == NULL)   //数値がなければクリア
+				if (scanf("%d", &check) == NULL)
 				{
 					scanf("%*[^\n]%*c");
 					printf("入力エラー\n");
@@ -247,7 +247,7 @@ void Input(int turn)
 			continue;
 		}
 		printf("1～8までの間でｙ軸を入力してください。>");
-		if (scanf("%d", &y) == 0)//数値がなければクリア
+		if (scanf("%d", &y) == 0)
 		{
 			scanf("%*[^\n]%*c");
 			printf("入力エラー\n");
