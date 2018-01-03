@@ -361,7 +361,7 @@ int AB(bool flag, int lv, bool put, int turn, int mode, int al, int be)
 				temp = AB(!flag, lv - 1, true, turn, mode, al, be); //手番をプレイヤーへ変えたためフラグをfalseへ
 				Reverse(nodo);                                  //元に戻す
 				turn = (turn + 1) % 2;
-				//フラグが立ちtempの方がα評価より大きくなるかb評価より小さければベストにいれる
+				//フラグが立ったときAIの方がα評価より大きくればベストにいれる
 				if (flag) {
 					if (temp >= al)
 					{
@@ -369,32 +369,33 @@ int AB(bool flag, int lv, bool put, int turn, int mode, int al, int be)
 						vest_x = x;
 						vest_y = y;
 					}
-					//αの方がβより大きければαを入れる
+					//αの方がβより大きければαを評価値として返す
 					if (al > be)return(al);
-				}
-				else
-				{
+				}else{
+					//フラグが立たなかった時、Playerよりβの評価がたかければベストに入れる
 					if (temp <= be)
 					{
 						be = temp;
 						vest_x = x;
 						vest_y = y;
 					}
+					//βの方がαより小さかった場合βを評価値として返す
 					if (al > be)return(be);
 				}
 			}
 		}
 	}
-	//レベルが探索最大であればその値を入れる
+	//フラグが立てば探索が最大になった時のxとyを返すフラグが立たなければ
 	if (flagput)
 	{
+		//フラグが最大でeasy,normalだった場合ノーマル探索値のx,yを返す。hardだった場合ハード探索値のx,yを返す
 		if ((lv == N_SEARCH&&mode == 1) || (lv == N_SEARCH&&mode == 2))return(vest_x + vest_y*BOARD);
 		else if (lv == H_SEARCH&&mode == 3)return(vest_x + vest_y*BOARD);
 		else if (flag)return(al);
 		else return(be);
 	}
 	else if (!put&&mode == 1) return 0;
-	else if (!put&&mode == 2)return (ValueBoard(turn));
+	else if (!put&&(mode == 2||mode==3))return (ValueBoard(turn));
 	else
 	{
 		turn = (turn + 1) % 2;
