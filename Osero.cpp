@@ -384,8 +384,7 @@ int AB(bool flag, int lv, bool put, int turn, int mode, int al, int be)
 					}
 					//αの方がβより大きければαを評価値として返す
 					if (al > be)return(al);
-				}
-				else {
+				}else {
 					//フラグが立たなかった時、Playerよりβの評価がたかければベストに入れる
 					if (temp <= be)
 					{
