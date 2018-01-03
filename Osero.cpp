@@ -408,6 +408,7 @@ void AI(int turn, int mode)
 {
 	int x, y;
 	Nodo nodo;
+	//モードがeasy,normalであればノーマルサーチ,hardであればハード探索になる
 	if (mode == 1 || mode == 2) {
 		y = AB(true, N_SEARCH, true, turn, mode, -9999, 9999);   //最善策
 	}
