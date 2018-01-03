@@ -340,7 +340,7 @@ int ValueBoard(int turn) {
 		value += ValueDropDown(turn);
 	}
 	else value += ValueBoardNum();  //終盤
-									//Aiターンならばそのまま返しそれ以外ならばマイナスで返す
+//Aiターンならばそのまま返しそれ以外ならばマイナスで返す
 	if (turn == Ai_turn)return(value);
 	else return(-value);
 
