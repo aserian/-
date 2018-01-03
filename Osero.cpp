@@ -385,7 +385,7 @@ int AB(bool flag, int lv, bool put, int turn, int mode, int al, int be)
 			}
 		}
 	}
-	//フラグが立てば探索が最大になった時のxとyを返すフラグが立たなければ
+	//フラグが立てば探索が最大になった時のxとyを返すフラグが立たなければ盤面を相手の石の数で評価し、それ以外であれば続行
 	if (flagput)
 	{
 		//フラグが最大でeasy,normalだった場合ノーマル探索値のx,yを返す。hardだった場合ハード探索値のx,yを返す
