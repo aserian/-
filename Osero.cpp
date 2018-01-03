@@ -486,8 +486,7 @@ int main() {
 	int turn = 0;
 	InitBoard();       //初期化関数
 	InputTurn();	   //先行後行確認
-	//モード関数
-	InputMode();
+	InputMode();　　　　//モード関数
 	//モードが選ばれていたら開始
 	if (mode == 1 || mode == 2 || mode == 3)
 	{
