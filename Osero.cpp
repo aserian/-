@@ -314,7 +314,8 @@ int ValueDropDown(int turn)
 	for (y = 0; y < BOARD; y++)
 		for (x = 0; x < BOARD; x++)
 			if (Check(x, y, turn))value += 1;     //置ければ評価に１足す
-	if (turn != i_turn)return(3 * value);
+	//ターンがAiであれば、3を掛けてそのまま返しそれ以外であればマイナスで返す
+	if (turn == Ai_turn)return(3 * value);
 	else return(-3 * value);
 }
 //盤面を相手との石の数で評価する
@@ -338,7 +339,7 @@ int ValueBoard(int turn) {
 		value += ValueDropDown(turn);
 	}
 	else value += ValueBoardNum();  //終盤
-
+　　　　　//Aiターンならばそのまま返しそれ以外ならばマイナスで返す
 	if (turn == Ai_turn)return(value);
 	else return(-value);
 
