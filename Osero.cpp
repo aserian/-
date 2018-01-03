@@ -161,8 +161,7 @@ void InputTurn()
 			i_turn = 0;
 			Ai_turn = 1;
 			break;
-		}
-		else if (ch == 2) {
+		}else if (ch == 2) {
 			i_turn = 1;
 			Ai_turn = 0;
 			break;
