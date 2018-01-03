@@ -18,7 +18,7 @@
 #define N_SEARCH 5
 #define H_SEARCH 7
 //レベル定義
-#define MIDDLE 10 
+#define MIDLE 10 
 #define FINISH 48    
 //テーブル生成
 const int Value[BOARD][BOARD] = {
@@ -41,10 +41,10 @@ typedef struct
 int Number;                  //手数
 int board[BOARD][BOARD];     //ボード
 int mode;                   //モード
-//ターン
+							//ターン
 int Ai_turn;    //AI
 int i_turn;     //Player
-//移動量
+				//移動量
 int vector_y[] = { -1,-1,0,1,1,1,0,-1 };
 int vector_x[] = { 0,1,1,1,0,-1,-1,-1 };
 //ボードの初期化
@@ -161,7 +161,8 @@ void InputTurn()
 			i_turn = 0;
 			Ai_turn = 1;
 			break;
-		}else if (ch == 2){
+		}
+		else if (ch == 2) {
 			i_turn = 1;
 			Ai_turn = 0;
 			break;
@@ -246,7 +247,7 @@ int InputTurn(Nodo* nodo, int turn) {
 //入力
 void Input(int turn)
 {
-	int x, y, re;
+	int x, y;
 	while (1) {
 		//入力
 		printf("１～８までの間でx軸を入力してください。>");
@@ -314,7 +315,7 @@ int ValueDropDown(int turn)
 	for (y = 0; y < BOARD; y++)
 		for (x = 0; x < BOARD; x++)
 			if (Check(x, y, turn))value += 1;     //置ければ評価に１足す
-	//ターンがAiであれば、3を掛けてそのまま返しそれ以外であればマイナスで返す
+												  //ターンがAiであれば、3を掛けてそのまま返しそれ以外であればマイナスで返す
 	if (turn == Ai_turn)return(3 * value);
 	else return(-3 * value);
 }
@@ -328,7 +329,7 @@ int ValueBoardNum() {
 //盤面評価
 int ValueBoard(int turn) {
 	int value = 0;
-	if (Number <= MIDDLE)          //序盤
+	if (Number <= MIDLE)          //序盤
 	{
 		value += ValuePlace();
 		value += ValueDropDown(turn);
@@ -339,7 +340,7 @@ int ValueBoard(int turn) {
 		value += ValueDropDown(turn);
 	}
 	else value += ValueBoardNum();  //終盤
-　　　　　//Aiターンならばそのまま返しそれ以外ならばマイナスで返す
+									//Aiターンならばそのまま返しそれ以外ならばマイナスで返す
 	if (turn == Ai_turn)return(value);
 	else return(-value);
 
@@ -487,8 +488,8 @@ int main() {
 	int turn = 0;
 	InitBoard();       //初期化関数
 	InputTurn();	   //先行後行確認
-	InputMode();　　　　//モード関数
-	//モードが選ばれていたら開始
+	InputMode();      //モード関数
+					//モードが選ばれていたら開始
 	if (mode == 1 || mode == 2 || mode == 3)
 	{
 		while (turn < 2) {
