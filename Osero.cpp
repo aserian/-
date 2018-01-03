@@ -41,7 +41,7 @@ typedef struct
 int Number;   //手数
 int board[BOARD][BOARD];  //ボード
 int mode;                  //モード
-						   //移動量
+//移動量
 int vector_y[] = { -1,-1,0,1,1,1,0,-1 };
 int vector_x[] = { 0,1,1,1,0,-1,-1,-1 };
 //ボードの初期化
@@ -505,8 +505,7 @@ int main() {
 				turn = (turn + 1) % 2;
 				printf("パス\n");
 				turn = (turn + 1) % 2;
-			}
-			else if (End(turn) == 2) {
+			}else if (End(turn) == 2) {
 				printf("ゲーム終了\n");
 				break;
 			}
