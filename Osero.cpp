@@ -496,7 +496,7 @@ int main() {
 				Display();                //表示関数
 			}
 			else printf("試行中・・・\n");
-			if (turn == i_turn) Input(turn);    //入力関数
+			if (turn == i_turn) Input(i_turn);    //入力関数
 			else if (turn == Ai_turn) {
 				AI(Ai_turn, mode);            //AI関数
 
