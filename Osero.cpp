@@ -121,7 +121,7 @@ void InputMode() {
 			while (1)
 			{
 				printf("本当に宜しいですね(1;yes,2;no)？\n");
-				//1が押されれば難易度決めに戻る0が押されればそのまま続行
+				//2が押されれば難易度決めに戻る1が押されればそのまま続行
 				if (scanf("%d", &check) == NULL)
 				{
 					scanf("%*[^\n]%*c");
@@ -370,7 +370,7 @@ int AB(bool flag, int lv, bool put, int turn, int mode, int al, int be)
 				temp = AB(!flag, lv - 1, true, turn, mode, al, be); //手番をプレイヤーへ変えたためフラグをfalseへ
 				Reverse(nodo);                                  //元に戻す
 				turn = (turn + 1) % 2;
-				//フラグが立ったときAIの方がα評価より大きくればベストにいれる
+				//フラグが立ったときAIの方がα評価より大きければベストにいれる
 				if (flag) {
 					if (temp >= al)
 					{
