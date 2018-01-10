@@ -37,14 +37,14 @@ typedef struct
 	int x, y;           //石の場所
 	int point;          //返った石の数
 	int position[64];   //石のひっくり返った場所
-}Nodo;
+}Node;
 int Number;                  //手数
 int board[BOARD][BOARD];     //ボード
 int mode;                   //モード
-//ターン
+							//ターン
 int Ai_turn;    //AI
 int i_turn;     //Player
-//移動量
+				//移動量
 int vector_y[] = { -1,-1,0,1,1,1,0,-1 };
 int vector_x[] = { 0,1,1,1,0,-1,-1,-1 };
 //ボードの初期化
@@ -66,13 +66,13 @@ void InitBoard(void)
 	board[BOARD / 2][BOARD / 2 - 1] = WHITE;
 	Number = 0;     //手数の初期化
 }
-//nodoの初期化
-void InitNodo(Nodo* nodo, int x, int y)
+//ノードの初期化
+void InitNode(Node* node, int x, int y)
 {
-	nodo->x = x;
-	nodo->y = y;
-	nodo->point = 0;
-	for (int i = 0; i <64; i++) nodo->position[i] = 0;
+	node->x = x;
+	node->y = y;
+	node->point = 0;
+	for (int i = 0; i <64; i++) node->position[i] = 0;
 }
 //ボード表示
 void Display(void) {
@@ -84,7 +84,7 @@ void Display(void) {
 		printf("%d", (y + 1));
 		for (x = 0; x<BOARD; x++)
 		{
-			//ボード上が0であれば・か１であれば黒か-1であれば白
+			//ボード上が0であれば・、１であれば黒、-1であれば白
 			if (board[y][x] == NONE)
 				printf("・");
 			else if (board[y][x] == BLACK)
@@ -101,7 +101,7 @@ void InputMode() {
 	mode = 0;
 	while (1) {
 		printf("難易度を決めてください\n1:easy,2:normal,3;hard\n");
-		if (scanf("%d", &lv) == 0)//数値がなければクリア
+		if (scanf("%d", &lv) == 0)      //数値がなければクリア
 		{
 			scanf("%*[^\n]%*c");
 			printf("入力エラー\n");
@@ -121,7 +121,7 @@ void InputMode() {
 			while (1)
 			{
 				printf("本当に宜しいですね(1;yes,2;no)？\n");
-				//2が押されれば難易度決めに戻る1が押されればそのまま続行
+				//2が押されれば難易度決めに戻る1が押されれば開始
 				if (scanf("%d", &check) == NULL)
 				{
 					scanf("%*[^\n]%*c");
@@ -161,7 +161,8 @@ void InputTurn()
 			i_turn = 0;
 			Ai_turn = 1;
 			break;
-		}else if (ch == 2) {
+		}
+		else if (ch == 2) {
 			i_turn = 1;
 			Ai_turn = 0;
 			break;
@@ -184,7 +185,7 @@ int VectorLook(int x, int y, int turn, int vec)
 			flag = 1;
 			continue;
 		}
-		//フラグが立てばループ終わり立っていない場合続行
+		//フラグが立てばループ終わり。立っていない場合続行。
 		if (flag == 1)break;
 		return 0;
 	}
@@ -201,10 +202,10 @@ int Check(int x, int y, int turn)
 	return 0;
 }
 //裏返す処理
-void Turn(Nodo* nodo, int turn, int vec) {
-	int x = nodo->x;
-	int y = nodo->y;
-	int i = nodo->point;
+void Turn(Node* node, int turn, int vec) {
+	int x = node->x;
+	int y = node->y;
+	int i = node->point;
 	while (1) {
 		x += vector_x[vec];
 		y += vector_y[vec];
@@ -213,29 +214,29 @@ void Turn(Nodo* nodo, int turn, int vec) {
 			break;
 		}
 		board[y][x] = (turn ? WHITE : BLACK);	//自分自身でないならひっくり返す
-		nodo->position[i] = x + y*BOARD;      //ひっくり返った場所を記憶する
+		node->position[i] = x + y*BOARD;      //ひっくり返った場所を記憶する
 		i++;
 	}
-	nodo->position[nodo->point = i] = 0;
+	node->position[node->point = i] = 0;
 }
 //入力から裏返す判定
-int InputTurn(Nodo* nodo, int turn) {
+int InputTurn(Node* node, int turn) {
 	int vector, flag = 0;
 
 	//全て埋まっていればゲーム終了
-	if (board[nodo->y][nodo->x] != NONE)return 0;
+	if (board[node->y][node->x] != NONE)return 0;
 	//全ての方向を確認
 	for (vector = 0; vector<8; vector++) {
 		//ひっくり返る物があれば裏返す
-		if (VectorLook(nodo->x, nodo->y, turn, vector) == 1) {
+		if (VectorLook(node->x, node->y, turn, vector) == 1) {
 			//裏返す処理
-			Turn(nodo, turn, vector);
+			Turn(node, turn, vector);
 			flag = 1;
 		}
 	}
 	if (flag == 1) {
 		//フラグが立っていればフラグのたった場所に置く
-		board[nodo->y][nodo->x] = (turn ? WHITE : BLACK);
+		board[node->y][node->x] = (turn ? WHITE : BLACK);
 		return 1;
 	}
 	return 0;
@@ -267,9 +268,9 @@ void Input(int turn)
 		}
 		//置けるか
 		if (Check(x - 1, y - 1, turn) == 1) {
-			Nodo nodo;
-			InitNodo(&nodo, x - 1, y - 1);              //ノードにｘに1引いた値ととyに１引いた値を入れる
-			InputTurn(&nodo, turn);                      //裏返す処理
+			Node node;
+			InitNode(&node, x - 1, y - 1);              //ノードにｘに1引いた値ととyに１引いた値を入れる
+			InputTurn(&node, turn);                      //裏返す処理
 			Number++;                                  //手数を１足す
 			break;
 		}
@@ -279,17 +280,17 @@ void Input(int turn)
 
 }
 //オセロの状態を元へ
-void Reverse(Nodo nodo)
+void Reverse(Node node)
 {
 	int i = 0;
-	//ノードポジションに数値が入っていればそのポジションに-1を掛けて戻すそれ以外は0を入れる
-	while (nodo.position[i]> 0) {
-		int x = nodo.position[i] % 8;
-		int y = nodo.position[i] / 8;
+	//ノードポジションに数値が入っていればそのポジションに-1を掛けて戻す、それ以外は0を入れる
+	while (node.position[i]> 0) {
+		int x = node.position[i] % 8;
+		int y = node.position[i] / 8;
 		board[y][x] *= -1;
 		i++;
-		if (nodo.position[i] == 0) {
-			board[nodo.y][nodo.x] = NONE;
+		if (node.position[i] == 0) {
+			board[node.y][node.x] = NONE;
 			break;
 		}
 	}
@@ -311,7 +312,7 @@ int ValueDropDown(int turn)
 	for (y = 0; y < BOARD; y++)
 		for (x = 0; x < BOARD; x++)
 			if (Check(x, y, turn))value += 1;     //置ければ評価に１足す
-//ターンがAiであれば、3を掛けてそのまま返しそれ以外であればマイナスで返す
+												  //ターンがAIであれば、3を掛けてそのまま返しそれ以外であればマイナスで返す
 	if (turn == Ai_turn)return(3 * value);
 	else return(-3 * value);
 }
@@ -336,7 +337,7 @@ int ValueBoard(int turn) {
 		value += ValueDropDown(turn);
 	}
 	else value += ValueBoardNum();  //終盤
-//Aiターンならばそのまま返しそれ以外ならばマイナスで返す
+									//AIターンならばそのまま返しそれ以外ならばマイナスで返す
 	if (turn == Ai_turn)return(value);
 	else return(-value);
 
@@ -346,10 +347,9 @@ int AB(bool flag, int lv, bool put, int turn, int mode, int al, int be)
 {
 	int temp, x, y, vest_x, vest_y;
 	bool flagput = false;
-	Nodo nodo;
-	//レベルが０のとき０を返す
+	Node node;
 	if (lv == 0) {
-		//モード１では０２、３では思考をする
+		//モード１では０、それ以外のモードでは評価した値を返す
 		if (mode == 1) return 0;
 		else if (mode == 2 || mode == 3) return(ValueBoard(turn));
 	}
@@ -364,13 +364,13 @@ int AB(bool flag, int lv, bool put, int turn, int mode, int al, int be)
 			if (Check(x, y, turn) == 1)
 			{
 				flagput = true;
-				InitNodo(&nodo, x, y);              //記憶する
-				InputTurn(&nodo, turn);             //石を置く
+				InitNode(&node, x, y);              //記憶する
+				InputTurn(&node, turn);             //石を置く
 				turn = (turn + 1) % 2;              //手番をかえる
 				temp = AB(!flag, lv - 1, true, turn, mode, al, be); //手番をプレイヤーへ変えたためフラグをfalseへ
-				Reverse(nodo);                                  //元に戻す
+				Reverse(node);                                  //元に戻す
 				turn = (turn + 1) % 2;
-				//フラグが立ったときAIの方がα評価より大きければベストにいれる
+				//フラグが立ったときAIの方がα評価より高ければベストにいれる
 				if (flag) {
 					if (temp >= al)
 					{
@@ -378,10 +378,11 @@ int AB(bool flag, int lv, bool put, int turn, int mode, int al, int be)
 						vest_x = x;
 						vest_y = y;
 					}
-					//αの方がβより大きければαを評価値として返す
+					//αの方がβより評価がたかければαを評価値として返す
 					if (al > be)return(al);
-				}else {
-					//フラグが立たなかった時、Playerよりβの評価がたかければベストに入れる
+				}
+				else {
+					//フラグが立たなかった時、Playerよりβの評価が高ければベストに入れる
 					if (temp <= be)
 					{
 						be = temp;
@@ -417,7 +418,7 @@ int AB(bool flag, int lv, bool put, int turn, int mode, int al, int be)
 void AI(int turn, int mode)
 {
 	int x, y;
-	Nodo nodo;
+	Node node;
 	//モードがeasy,normalであればノーマルサーチ,hardであればハード探索になる
 	if (mode == 1 || mode == 2) {
 		y = AB(true, N_SEARCH, true, turn, mode, -9999, 9999);   //最善策
@@ -433,8 +434,8 @@ void AI(int turn, int mode)
 	}
 	x = y % BOARD;
 	y = y / BOARD;
-	InitNodo(&nodo, x, y);                                //ノードにxとyの値を入れる
-	InputTurn(&nodo, turn);                               //裏返す 
+	InitNode(&node, x, y);                                //ノードにxとyの値を入れる
+	InputTurn(&node, turn);                               //裏返す 
 	Number++;                                             //手数を１増やす
 }
 //ゲーム終了確認の処理
@@ -484,7 +485,7 @@ int main() {
 	InitBoard();       //初期化関数
 	InputTurn();	   //先行後行確認
 	InputMode();      //モード関数
-	//モードが選ばれていたら開始
+					  //モードが選ばれていたら開始
 	if (mode == 1 || mode == 2 || mode == 3)
 	{
 		while (turn < 2) {
