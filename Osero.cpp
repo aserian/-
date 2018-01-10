@@ -341,7 +341,7 @@ int ValueBoard(int turn) {
 	else return(-value);
 
 }
-//α-β法で探索で最善の策を探索
+//α-β法で探索
 int AB(bool flag, int lv, bool put, int turn, int mode, int al, int be)
 {
 	int temp, x, y, vest_x, vest_y;
