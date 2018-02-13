@@ -1,7 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
-#define scanf scanf_s
+#include<iostream>
 #define BOARD 8 //ボードの大きさ
 //状態定義
 #define NONE 0 
@@ -15,8 +12,8 @@
 #define MIDLE 15
 #define FINISH 48
 //探索手数
-#define N_SEARCH 5
-#define H_SEARCH 7  
+#define N_SEARCH 3
+#define H_SEARCH 5  
 //テーブル生成
 const int Value[BOARD][BOARD] = {
 	{ 50,-10,  4, -1, -1,  4,-10, 50, },
@@ -44,6 +41,9 @@ int i_turn;     //Player
 				//移動量
 int vector_y[] = { -1,-1,0,1,1,1,0,-1 };
 int vector_x[] = { 0,1,1,1,0,-1,-1,-1 };
+
+using namespace std;
+
 //ボードの初期化
 void InitBoard(void)
 {
@@ -98,11 +98,10 @@ void InputMode() {
 	mode = 0;
 	while (1) {
 		printf("難易度を決めてください\n1:easy,2:normal,3;hard\n");
-		if (scanf("%d", &lv) == 0)      //数値がなければクリア
-		{
-			scanf("%*[^\n]%*c");
+		if ( !(cin >> lv)) {
 			printf("入力エラー\n");
-			continue;
+			cin.clear();
+			cin.ignore(10000, '\n');
 		}
 		if (lv == EASY) {
 			printf("easyモードで開始します\n");
@@ -118,14 +117,12 @@ void InputMode() {
 			while (1)
 			{
 				printf("本当に宜しいですね(1;yes,2;no)？\n");
-				//2が押されれば難易度決めに戻る1が押されれば開始
-				if (scanf("%d", &check) == NULL)
-				{
-					scanf("%*[^\n]%*c");
+				if (!(cin >> check)) {
 					printf("入力エラー\n");
-					continue;
+					cin.clear();
+					cin.ignore(10000,'\n');
 				}
-				else if (check == 1) {
+				 if (check == 1) {
 					printf("開始します\n");
 					mode = 3;
 					break;
@@ -146,11 +143,10 @@ void InputTurn()
 	while (1)
 	{
 		printf("先攻(白)か後攻(黒)か選んでください。\n1:先行(白),2:後行(黒)\n");
-		if (scanf("%d", &ch) == 0)//数値がなければクリア
-		{
-			scanf("%*[^\n]%*c");
+		if (!(cin >> ch)) {
 			printf("入力エラー\n");
-			continue;
+			cin.clear();
+			cin.ignore(10000,'\n');
 		}
 		//先攻が選ばれれば白、後攻が選ばれれば黒
 		if (ch == 1)
@@ -245,20 +241,18 @@ void Input(int turn)
 	while (1) {
 		//入力
 		printf("１～８までの間でx軸を入力してください。>");
-		if (scanf("%d", &x) == 0)//数値がなければクリア
-		{
-			scanf("%*[^\n]%*c");
+		if (!(cin >> x)) {
 			printf("入力エラー\n");
-			continue;
+			cin.clear();
+			cin.ignore(10000, '\n');
 		}
 		printf("1～8までの間でｙ軸を入力してください。>");
-		if (scanf("%d", &y) == 0)
-		{
-			scanf("%*[^\n]%*c");
+		if (!(cin >> y)) {
 			printf("入力エラー\n");
-			continue;
+			cin.clear();
+			cin.ignore(10000, '\n');
 		}
-		else if (x>BOARD || x <= 0 || y>BOARD || y <= 0) {
+		if (x>BOARD || x <= 0 || y>BOARD || y <= 0) {
 			printf("範囲内で入力してください\n");
 			x = 0; y = 0;
 			continue;
