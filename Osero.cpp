@@ -16,10 +16,7 @@
 #define FINISH 48
 //探索手数
 #define N_SEARCH 5
-#define H_SEARCH 7
-//レベル定義
-#define MIDLE 10 
-#define FINISH 48    
+#define H_SEARCH 7  
 //テーブル生成
 const int Value[BOARD][BOARD] = {
 	{ 50,-10,  4, -1, -1,  4,-10, 50, },
