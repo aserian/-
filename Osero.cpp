@@ -35,10 +35,10 @@ typedef struct
 int Number;                  //手数
 int board[BOARD][BOARD];     //ボード
 int mode;                   //モード
-							//ターン
+//ターン
 int Ai_turn;    //AI
 int i_turn;     //Player
-				//移動量
+//移動量
 int vector_y[] = { -1,-1,0,1,1,1,0,-1 };
 int vector_x[] = { 0,1,1,1,0,-1,-1,-1 };
 
@@ -303,7 +303,7 @@ int ValueDropDown(int turn)
 	for (y = 0; y < BOARD; y++)
 		for (x = 0; x < BOARD; x++)
 			if (Check(x, y, turn))value += 1;     //置ければ評価に１足す
-												  //ターンがAIであれば、3を掛けてそのまま返しそれ以外であればマイナスで返す
+//ターンがAIであれば、3を掛けてそのまま返しそれ以外であればマイナスで返す
 	if (turn == Ai_turn)return(3 * value);
 	else return(-3 * value);
 }
